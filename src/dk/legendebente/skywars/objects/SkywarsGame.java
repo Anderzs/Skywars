@@ -3,16 +3,18 @@ package dk.legendebente.skywars.objects;
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
 import dk.legendebente.skywars.packets.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 public class SkywarsGame {
 
@@ -20,6 +22,7 @@ public class SkywarsGame {
     private int minPlayers;
     private int maxPlayers;
     private String host;
+    private Location lobbyPoint;
 
     //Temp variabler
     private HashMap<Player, Location> _playerSpawn;
@@ -27,7 +30,7 @@ public class SkywarsGame {
     private List<GamePlayer> _playersLeftIngame;
     private List<GamePlayer> _spectators;
     private Set<Chest> _chestsOpened;
-    private GameState _gameState;
+    private GameState _gameState = GameState.LOBBY;
 
 
     //Fil konfiguration
@@ -40,12 +43,31 @@ public class SkywarsGame {
             createConfigFile();
         }
 
+        //Sæt variabler
+        this.configFile = getConfigFile();
+        this.configuration = YamlConfiguration.loadConfiguration(configFile);
+        this.minPlayers = configuration.getInt("Game.minPlayers");
+        this.maxPlayers = configuration.getInt("Game.maxPlayers");
+
+        this._playersLeftIngame = new ArrayList<>();
+        this._playersJoined = new ArrayList<>();
+        this._spectators = new ArrayList<>();
+        this._chestsOpened = new HashSet<>();
+        this._playerSpawn = new HashMap<>();
+
+        Skywars.getInstance().registerGame(this);
+        Bukkit.getConsoleSender().sendMessage(ChatHandler.format(Skywars.getPrefix() + "&7Registrerede spillet!"));
     }
 
     public void joinGame(Player player){
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setFlying(false);
+        player.getInventory().clear();
+        player.teleport(getLobbyPoint());
+
         GamePlayer _player = new GamePlayer(player);
         _playersJoined.add(_player);
-
+        sendToAll("&a" + player.getName() + " &7tilsluttede spillet! &8(&e" + getPlayersJoined().size() + "&7/&e" + getMaxPlayers() + "&8)");
     }
 
     public void startGame(){
@@ -58,7 +80,7 @@ public class SkywarsGame {
         player.closeInventory();
         player.getInventory().clear();
         player.setGameMode(GameMode.SPECTATOR);
-        player.sendMessage(ChatHandler.format("&8[&c&l!&8] &7Du er blevet sat til &6SPECTATOR&7!"));
+        player.sendMessage(ChatHandler.format("&8[&c&l!&8] &7Opdateret gamemode til &6spectator"));
         specTitle.sendTitle(player);
 
         //Fjern spilleren fra spillet
@@ -71,6 +93,24 @@ public class SkywarsGame {
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void sendToAll(String msg){
+        for(GamePlayer gp : getPlayersJoined()){
+            gp.sendMessage(msg);
+        }
+    }
+
+    public Location getLobbyPoint(){
+        try{
+            configuration.load(configFile);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return new Location(Bukkit.getWorld(configuration.getString("Game.Location.WORLD")),
+                configuration.getDouble("Game.Location.X"),
+                configuration.getDouble("Game.Location.Y"),
+                configuration.getDouble("Game.Location.Z"));
     }
 
     public File getConfigFile(){
@@ -87,6 +127,15 @@ public class SkywarsGame {
 
     public List<GamePlayer> getSpectators(){
         return this._spectators;
+    }
+
+    public GamePlayer getGamePlayer(Player player){
+        for(GamePlayer gp : getPlayersJoined()){
+            if(gp.getPlayer() == player){
+                return gp;
+            }
+        }
+        return null;
     }
 
     public GameState getGameState(){

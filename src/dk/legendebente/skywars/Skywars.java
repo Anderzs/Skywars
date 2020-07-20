@@ -1,5 +1,9 @@
 package dk.legendebente.skywars;
 
+import dk.legendebente.skywars.commands.SkywarsCommand;
+import dk.legendebente.skywars.events.JoinEvent;
+import dk.legendebente.skywars.events.PlayerDeath;
+import dk.legendebente.skywars.events.PlayerWinEvent;
 import dk.legendebente.skywars.objects.SkywarsGame;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,8 +18,15 @@ public class Skywars extends JavaPlugin {
     @Override
     public void onEnable(){
         instance = this;
-
+        if(!getDataFolder().exists()){
+            getDataFolder().mkdir();
+        }
         new SkywarsGame();
+
+        getServer().getPluginManager().registerEvents(new JoinEvent(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
+
+        getCommand("skywars").setExecutor(new SkywarsCommand());
     }
 
     public SkywarsGame getGame(){

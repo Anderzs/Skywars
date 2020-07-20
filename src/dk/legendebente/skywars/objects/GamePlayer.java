@@ -28,7 +28,7 @@ public class GamePlayer {
     }
 
     public boolean isDead(){
-        if(game.getSpectators().contains(this) || Bukkit.getServer().getPlayer(player.getName()) == null || !game.getPlayersLeft().contains(this)){
+        if(game.getSpectators().contains(this) || Bukkit.getServer().getPlayer(player.getName()) == null){
             return true;
         } else {
             return false;

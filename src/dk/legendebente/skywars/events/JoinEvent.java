@@ -16,6 +16,7 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onServerJoin(PlayerJoinEvent event){
+        event.setJoinMessage(null);
         if(game.getPlayersJoined().size() >= game.getMaxPlayers() || game.getGameState() != SkywarsGame.GameState.LOBBY){
             game.activateSpectator(new GamePlayer(event.getPlayer()));
         } else {

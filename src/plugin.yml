@@ -1,0 +1,7 @@
+name: Skywars
+author: LegendeBente
+main: dk.legendebente.skywars.Skywars
+version: 1.0
+commands:
+  skywars:
+    usage: /<command>
