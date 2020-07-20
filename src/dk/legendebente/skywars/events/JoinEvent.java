@@ -2,6 +2,7 @@ package dk.legendebente.skywars.events;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.objects.GamePlayer;
 import dk.legendebente.skywars.objects.SkywarsGame;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -15,7 +16,11 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onServerJoin(PlayerJoinEvent event){
-
+        if(game.getPlayersJoined().size() >= game.getMaxPlayers() || game.getGameState() != SkywarsGame.GameState.LOBBY){
+            game.activateSpectator(new GamePlayer(event.getPlayer()));
+        } else {
+            game.joinGame(event.getPlayer());
+        }
     }
 
     @EventHandler

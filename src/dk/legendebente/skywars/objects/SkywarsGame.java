@@ -1,6 +1,9 @@
 package dk.legendebente.skywars.objects;
 
 import dk.legendebente.skywars.Skywars;
+import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.packets.Title;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -49,6 +52,19 @@ public class SkywarsGame {
 
     }
 
+    public void activateSpectator(GamePlayer gamePlayer){
+        Player player = gamePlayer.getPlayer();
+        Title specTitle = new Title(ChatHandler.format("&6&lSPECTATOR"), ChatHandler.format("&7Du er blevet &6&lSPECTATOR"), 10, 20, 10);
+        player.closeInventory();
+        player.getInventory().clear();
+        player.setGameMode(GameMode.SPECTATOR);
+        player.sendMessage(ChatHandler.format("&8[&c&l!&8] &7Du er blevet sat til &6SPECTATOR&7!"));
+        specTitle.sendTitle(player);
+
+        //Fjern spilleren fra spillet
+        getPlayersLeft().remove(gamePlayer);
+    }
+
     private void createConfigFile(){
         try{
             getConfigFile().createNewFile();
@@ -65,12 +81,20 @@ public class SkywarsGame {
         return this._playersLeftIngame;
     }
 
+    public List<GamePlayer> getPlayersJoined(){
+        return this._playersJoined;
+    }
+
     public List<GamePlayer> getSpectators(){
         return this._spectators;
     }
 
     public GameState getGameState(){
         return this._gameState;
+    }
+
+    public int getMaxPlayers(){
+        return this.maxPlayers;
     }
 
     public enum GameState{

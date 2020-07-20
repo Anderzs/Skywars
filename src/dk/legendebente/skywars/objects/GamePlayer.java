@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 public class GamePlayer {
 
     private Player player;
+    private int _placement;
     private SkywarsGame game = Skywars.getInstance().getGame();
 
     public GamePlayer(Player player){
@@ -34,8 +35,12 @@ public class GamePlayer {
         }
     }
 
+    public Integer getPlacement(){
+        return this._placement;
+    }
+
     public void sendMessage(String message){
-        this.player.sendMessage(ChatHandler.format(message));
+        this.player.sendMessage(ChatHandler.format("&8[&c&l!&8] " + message));
     }
 
     public Player getPlayer(){
