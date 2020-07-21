@@ -26,8 +26,8 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void beforeServerJoin(AsyncPlayerPreLoginEvent event){
-        if(game.getGameState() != SkywarsGame.GameState.LOBBY && !Bukkit.getPlayer(event.getUniqueId()).isOp()){
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatHandler.format(Skywars.getPrefix() + "&7Spillet er igang! \n &7Tjek vores discord for mere information"));
+        if(game.getGameState() != SkywarsGame.GameState.LOBBY){
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatHandler.format(Skywars.getPrefix() + "\n&cSpillet er igang! \n\n &eTjek vores discord for mere information"));
         }
     }
 

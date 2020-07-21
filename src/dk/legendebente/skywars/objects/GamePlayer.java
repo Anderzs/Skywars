@@ -35,8 +35,16 @@ public class GamePlayer {
         }
     }
 
+    public void removeFromGame(){
+
+    }
+
     public Integer getPlacement(){
         return this._placement;
+    }
+
+    public void setPlacement(int placement){
+        this._placement = placement;
     }
 
     public void sendMessage(String message){

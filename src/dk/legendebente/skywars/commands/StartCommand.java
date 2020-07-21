@@ -20,7 +20,8 @@ public class StartCommand extends SubCommand {
                 return;
             }
 
-            //TODO: LAV RESTEN, LAVER SKYWARSCOMMAND LIGE NU...
+            player.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&7Du har startet spillet!"));
+            game.startGame();
         }
     }
 }

@@ -70,8 +70,12 @@ public class SkywarsGame {
         sendToAll("&a" + player.getName() + " &7tilsluttede spillet! &8(&e" + getPlayersJoined().size() + "&7/&e" + getMaxPlayers() + "&8)");
     }
 
-    public void startGame(){
-
+    public void startGame() {
+        for(GamePlayer gp : getPlayersJoined()){
+            Skywars.getInstance().getSkywarsBoard().setScoreboard(gp, Skywars.getInstance().getSkywarsBoard().getLobbyScoreboard());
+        }
+        Skywars.getInstance().getStartGameScheduler().runTaskTimerAsynchronously(Skywars.getInstance(), 0, 20);
+        setGameState(GameState.PREPARATION);
     }
 
     public void activateSpectator(GamePlayer gamePlayer){
@@ -87,6 +91,10 @@ public class SkywarsGame {
         getPlayersLeft().remove(gamePlayer);
     }
 
+    public void teleportToSpawnPoints(){
+
+    }
+
     private void createConfigFile(){
         try{
             getConfigFile().createNewFile();
@@ -95,8 +103,14 @@ public class SkywarsGame {
         }
     }
 
-    private void sendToAll(String msg){
+    public void sendToAll(String msg){
         for(GamePlayer gp : getPlayersJoined()){
+            gp.sendMessage(msg);
+        }
+    }
+
+    public void sendToAlive(String msg){
+        for(GamePlayer gp : getPlayersLeft()){
             gp.sendMessage(msg);
         }
     }
@@ -136,6 +150,10 @@ public class SkywarsGame {
             }
         }
         return null;
+    }
+
+    public void setGameState(GameState gameState){
+        this._gameState = gameState;
     }
 
     public GameState getGameState(){
