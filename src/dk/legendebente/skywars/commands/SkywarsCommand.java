@@ -15,11 +15,13 @@ public class SkywarsCommand implements CommandExecutor {
     private StartCommand startCommand;
     private ListCommand listCommand;
     private LobbyPointCommand lobbyPointCommand;
+    private SpawnPointCommand spawnPointCommand;
 
     public SkywarsCommand(){
         this.startCommand = new StartCommand();
         this.listCommand = new ListCommand();
         this.lobbyPointCommand = new LobbyPointCommand();
+        this.spawnPointCommand = new SpawnPointCommand();
     }
 
     @Override
@@ -49,7 +51,6 @@ public class SkywarsCommand implements CommandExecutor {
                 argList.add(args[i]);
             }
 
-            //TODO: argList.toArray(new String[0]
 
             if(arg.equalsIgnoreCase("start")){
                 this.startCommand.execute(sender, null);
@@ -57,6 +58,8 @@ public class SkywarsCommand implements CommandExecutor {
                 this.lobbyPointCommand.execute(sender, null);
             } else if(arg.equalsIgnoreCase("list")){
                 this.listCommand.execute(sender, null);
+            }else if(arg.equalsIgnoreCase("setpoint")) {
+                this.spawnPointCommand.execute(sender, argList.toArray(new String[0]));
             } else if(arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("hjælp")){
                 helpArguments(player);
             } else {
@@ -68,10 +71,13 @@ public class SkywarsCommand implements CommandExecutor {
     }
 
     private void helpArguments(Player player){
+        player.sendMessage("");
         player.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&bTilgængelige argumenter:"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars start &8| &eStart et game som normalt"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars forcestart &8| &eTeleporterer alle med det samme"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars setlobby &8| &eLav lokation for lobby spawn"));
+        player.sendMessage(ChatHandler.format(" &8&l* &7/skywars setpoint &8| &eSæt et spawnpoint for spillere"));
+        player.sendMessage("");
     }
 
 }

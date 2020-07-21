@@ -43,6 +43,9 @@ public class SkywarsGame {
             createConfigFile();
         }
 
+        //TODO: Lav en liste over alle spawnpoints i config
+        //TODO: Og få den til at registere dem her
+
         //Sæt variabler
         this.configFile = getConfigFile();
         this.configuration = YamlConfiguration.loadConfiguration(configFile);

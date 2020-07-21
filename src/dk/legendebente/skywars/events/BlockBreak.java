@@ -12,7 +12,7 @@ public class BlockBreak implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event){
-        if(!event.getPlayer().isOp() || game.getGameState() == SkywarsGame.GameState.LOBBY || game.getGameState() == SkywarsGame.GameState.PREPARATION){
+        if(!event.getPlayer().isOp() && (game.getGameState() == SkywarsGame.GameState.LOBBY || game.getGameState() == SkywarsGame.GameState.PREPARATION)){
             event.setCancelled(true);
         }
     }
