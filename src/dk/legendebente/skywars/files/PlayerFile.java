@@ -15,6 +15,10 @@ public class PlayerFile extends SkywarsFile {
     public PlayerFile(Player player) {
         super(new File(Skywars.getInstance().getDataFolder(), "/stats/" + player.getUniqueId().toString() + ".yml"));
         this.player = player;
+        if(!fileExists()){
+            super.createFile();
+            setDefaultData(player);
+        }
     }
 
     public PlayerFile(UUID uuid){
@@ -31,15 +35,29 @@ public class PlayerFile extends SkywarsFile {
 
 
     public Rank getRank(){
-        Object rank = super.getObject("Spiller.Rank");
-        return rank instanceof Rank ? (Rank) rank : null;
+        loadConfiguration();
+        String val = super.getString("Spiller.Rank");
+        //Bukkit.broadcastMessage(val + " " + Rank.valueOf(val));
+        return (val == null ? Rank.DEFAULT : Rank.valueOf(val));
     }
 
+
+
     public void setDefaultData(Player player){
+        loadConfiguration();
         super.setString("Spiller.Navn", player.getName());
         super.setInt("Spiller.Wins", 0);
-        super.setObject("Spiller.Rank", Rank.DEFAULT);
+        super.setObject("Spiller.Rank", Rank.DEFAULT.toString());
         super.saveFile();
+    }
+
+    public boolean fileExists(){
+        File playerFile = new File(Skywars.getInstance().getDataFolder(), "/stats/" + player.getUniqueId().toString() + ".yml");
+        if(playerFile.exists()){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

@@ -50,6 +50,7 @@ public class Skywars extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(), this);
 
         getCommand("skywars").setExecutor(new SkywarsCommand());
         getCommand("rank").setExecutor(new RankCommand());

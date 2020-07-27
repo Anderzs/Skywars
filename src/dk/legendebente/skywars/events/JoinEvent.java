@@ -18,8 +18,14 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onServerJoin(PlayerJoinEvent event){
-        playerFile = new PlayerFile(event.getPlayer());
-        Skywars.getInstance().addPlayerFile(playerFile);
+        if(Skywars.getInstance().getPlayerFile(event.getPlayer()) != null){
+            playerFile = Skywars.getInstance().getPlayerFile(event.getPlayer());
+            playerFile.loadConfiguration();
+        } else {
+            playerFile = new PlayerFile(event.getPlayer());
+            Skywars.getInstance().addPlayerFile(playerFile);
+        }
+
         event.setJoinMessage(null);
         if(game.getPlayersJoined().size() >= game.getMaxPlayers() || game.getGameState() != SkywarsGame.GameState.LOBBY){
             game.activateSpectator(new GamePlayer(event.getPlayer()));

@@ -19,10 +19,8 @@ public abstract class SkywarsFile {
     public SkywarsFile(File _file){
         this._file = _file;
         this._fileName = _file.getName();
-        if(!_file.exists()){
-            createFile();
-        }
     }
+
 
     public void saveFile(){
         try {
@@ -36,7 +34,6 @@ public abstract class SkywarsFile {
         if(!(this._file == null)){
             try {
                 _file.createNewFile();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
