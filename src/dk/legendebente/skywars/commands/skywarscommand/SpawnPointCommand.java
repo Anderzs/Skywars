@@ -1,7 +1,8 @@
-package dk.legendebente.skywars.commands;
+package dk.legendebente.skywars.commands.skywarscommand;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.commands.SubCommand;
 import dk.legendebente.skywars.files.ConfigFile;
 import dk.legendebente.skywars.objects.SkywarsGame;
 import org.bukkit.Location;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 
-public class SpawnPointCommand extends SubCommand{
+public class SpawnPointCommand extends SubCommand {
 
     private SkywarsGame game = Skywars.getInstance().getGame();
     private ConfigFile config = Skywars.getInstance().getConfiguration();

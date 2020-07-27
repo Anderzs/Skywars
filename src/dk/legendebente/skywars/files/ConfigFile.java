@@ -1,5 +1,6 @@
 package dk.legendebente.skywars.files;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,12 +31,24 @@ public class ConfigFile {
         getConfiguration().set(path, content);
     }
 
+    public String getString(String _path){
+        return getConfiguration().getString(_path);
+    }
+
     public void setDouble(String path, double content){
         getConfiguration().set(path, content);
     }
 
+    public double getDouble(String _path){
+        return getConfiguration().getDouble(_path);
+    }
+
     public void setInt(String path, int content){
         getConfiguration().set(path, content);
+    }
+
+    public int getInt(String _path){
+        return getConfiguration().getInt(_path);
     }
 
     public void saveFile(){
@@ -60,6 +73,10 @@ public class ConfigFile {
         } else {
             return true;
         }
+    }
+
+    public ConfigurationSection getConfigurationSection(String _path){
+        return getConfiguration().getConfigurationSection(_path);
     }
 
     public FileConfiguration getConfiguration(){

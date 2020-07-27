@@ -2,10 +2,12 @@ package dk.legendebente.skywars.objects;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.files.ConfigFile;
 import dk.legendebente.skywars.packets.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,7 +27,8 @@ public class SkywarsGame {
     private Location lobbyPoint;
 
     //Temp variabler
-    private HashMap<Player, Location> _playerSpawn;
+    private HashMap<GamePlayer, Location> _playerSpawn;
+    private List<Location> _spawnPoints;
     private List<GamePlayer> _playersJoined;
     private List<GamePlayer> _playersLeftIngame;
     private List<GamePlayer> _spectators;
@@ -43,8 +46,8 @@ public class SkywarsGame {
             createConfigFile();
         }
 
-        //TODO: Lav en liste over alle spawnpoints i config
-        //TODO: Og få den til at registere dem her
+        //Loader spawnpoints til skywars arenaen
+        loadSpawnPoints();
 
         //Sæt variabler
         this.configFile = getConfigFile();
@@ -62,6 +65,24 @@ public class SkywarsGame {
         Bukkit.getConsoleSender().sendMessage(ChatHandler.format(Skywars.getPrefix() + "&7Registrerede spillet!"));
     }
 
+    private void loadSpawnPoints(){
+        Skywars.getInstance().getLogger().info("Loader spawnpoints...");
+        this._spawnPoints = new ArrayList<>();
+        ConfigFile config = Skywars.getInstance().getConfiguration();
+
+        World world = Bukkit.getWorld(config.getString("Game.Location.WORLD"));
+        for(String spawnPoint : Skywars.getInstance().getConfiguration().getConfigurationSection("Game.spawnPoints").getKeys(false)){
+            try{
+                double x = config.getDouble("Game.spawnPoints." + spawnPoint + ".X");
+                double y = config.getDouble("Game.spawnPoints." + spawnPoint + ".Y");
+                double z = config.getDouble("Game.spawnPoints." + spawnPoint + ".Z");
+                _spawnPoints.add(new Location(world, x, y, z));
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void joinGame(Player player){
         player.setGameMode(GameMode.ADVENTURE);
         player.setFlying(false);
@@ -75,8 +96,10 @@ public class SkywarsGame {
 
     public void startGame() {
         for(GamePlayer gp : getPlayersJoined()){
+            getPlayersLeft().add(gp);
             Skywars.getInstance().getSkywarsBoard().setScoreboard(gp, Skywars.getInstance().getSkywarsBoard().getLobbyScoreboard());
         }
+        sendToAll("&7Teleportering starter om &630 sekunder");
         Skywars.getInstance().getStartGameScheduler().runTaskTimerAsynchronously(Skywars.getInstance(), 0, 20);
         setGameState(GameState.PREPARATION);
     }
@@ -95,7 +118,18 @@ public class SkywarsGame {
     }
 
     public void teleportToSpawnPoints(){
-
+        int id = 0;
+        for(GamePlayer gp : getPlayersLeft()) {
+            try{
+                //TODO: Lav så den opdaterer gamemodes
+                gp.getPlayer().teleport(_spawnPoints.get(id));
+                _playerSpawn.put(gp, _spawnPoints.get(id));
+                id += 1;
+                gp.getPlayer().setHealth(gp.getPlayer().getMaxHealth());
+            } catch(IndexOutOfBoundsException e){
+                Skywars.getInstance().getLogger().severe("Kunne ikke få alle ind på mappet!");
+            }
+        }
     }
 
     private void createConfigFile(){

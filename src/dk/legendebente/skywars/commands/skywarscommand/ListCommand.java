@@ -1,7 +1,8 @@
-package dk.legendebente.skywars.commands;
+package dk.legendebente.skywars.commands.skywarscommand;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.commands.SubCommand;
 import dk.legendebente.skywars.objects.GamePlayer;
 import dk.legendebente.skywars.objects.SkywarsGame;
 import org.bukkit.command.CommandSender;

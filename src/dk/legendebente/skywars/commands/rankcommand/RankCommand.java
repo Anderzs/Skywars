@@ -1,4 +1,4 @@
-package dk.legendebente.skywars.commands;
+package dk.legendebente.skywars.commands.rankcommand;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
@@ -10,23 +10,17 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkywarsCommand implements CommandExecutor {
+public class RankCommand implements CommandExecutor {
 
-    private StartCommand startCommand;
-    private ListCommand listCommand;
-    private LobbyPointCommand lobbyPointCommand;
-    private SpawnPointCommand spawnPointCommand;
+    private SetRank setRank;
 
-    public SkywarsCommand(){
-        this.startCommand = new StartCommand();
-        this.listCommand = new ListCommand();
-        this.lobbyPointCommand = new LobbyPointCommand();
-        this.spawnPointCommand = new SpawnPointCommand();
+    public RankCommand(){
+        this.setRank = new SetRank();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(label.equalsIgnoreCase("skywars")){
+        if(label.equalsIgnoreCase("rank")){
             if(!(sender instanceof Player)){
                 sender.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&7Du kan ikke gøre dette fra konsollen!"));
                 return true;
@@ -51,20 +45,8 @@ public class SkywarsCommand implements CommandExecutor {
                 argList.add(args[i]);
             }
 
-
-            if(arg.equalsIgnoreCase("start")){
-                this.startCommand.execute(sender, null);
-            } else if(arg.equalsIgnoreCase("setlobby")){
-                this.lobbyPointCommand.execute(sender, null);
-            } else if(arg.equalsIgnoreCase("list")){
-                this.listCommand.execute(sender, null);
-            }else if(arg.equalsIgnoreCase("setpoint")) {
-                this.spawnPointCommand.execute(sender, argList.toArray(new String[0]));
-            } else if(arg.equalsIgnoreCase("help") || arg.equalsIgnoreCase("hjælp")){
-                helpArguments(player);
-            } else {
-                player.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&cInvalid Argument"));
-                player.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&7Brug &e/skywars help &7for hjælp"));
+            if(arg.equalsIgnoreCase("set")){
+                setRank.execute(sender, argList.toArray(new String[0]));
             }
         }
         return true;
@@ -72,12 +54,11 @@ public class SkywarsCommand implements CommandExecutor {
 
     private void helpArguments(Player player){
         player.sendMessage("");
-        player.sendMessage(ChatHandler.format(Skywars.getPrefix() + "&bTilgængelige argumenter:"));
+        player.sendMessage(ChatHandler.format("&bTilgængelige argumenter:"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars start &8| &eStart et game som normalt"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars forcestart &8| &eTeleporterer alle med det samme"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars setlobby &8| &eLav lokation for lobby spawn"));
         player.sendMessage(ChatHandler.format(" &8&l* &7/skywars setpoint &8| &eSæt et spawnpoint for spillere"));
         player.sendMessage("");
     }
-
 }

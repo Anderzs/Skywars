@@ -1,7 +1,8 @@
-package dk.legendebente.skywars.commands;
+package dk.legendebente.skywars.commands.skywarscommand;
 
 import dk.legendebente.skywars.Skywars;
 import dk.legendebente.skywars.chathandler.ChatHandler;
+import dk.legendebente.skywars.commands.SubCommand;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 
-public class LobbyPointCommand extends SubCommand{
+public class LobbyPointCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args)  {

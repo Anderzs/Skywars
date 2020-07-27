@@ -5,3 +5,5 @@ version: 1.0
 commands:
   skywars:
     usage: /<command>
+  rank:
+    usage: /<command>
